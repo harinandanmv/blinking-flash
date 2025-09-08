@@ -3,6 +3,7 @@ package com.example.flash_blink;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button btn = findViewById(R.id.button);
+        EditText text = findViewById(R.id.editTextText);
 
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
@@ -37,7 +39,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Camera Not Accessible!!!", Toast.LENGTH_SHORT).show();
         }
 
-        btn.setOnClickListener(v -> blinkFlash(10));
+        btn.setOnClickListener(v -> {
+            String input = text.getText().toString().trim();
+
+            int times;
+            try {
+                times = Integer.parseInt(input);
+                if (times <= 0) {
+                    Toast.makeText(MainActivity.this, "Please enter a positive number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(MainActivity.this, "Invalid number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            blinkFlash(times);
+        });
     }
 
     private void blinkFlash(int times) {
